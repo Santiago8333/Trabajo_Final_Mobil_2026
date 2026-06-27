@@ -3,29 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_transform">
+    app:startDestination="@+id/nav_login">
 
     <fragment
-        android:id="@+id/nav_transform"
-        android:name="com.in.trabajo_final_mobil_2026.ui.transform.TransformFragment"
-        android:label="@string/menu_transform"
-        tools:layout="@layout/fragment_transform" />
+        android:id="@+id/nav_login"
+        android:name="com.in.trabajo_final_mobil_2026.ui.login.LoginFragment"
+        android:label="@string/menu_login"
+        tools:layout="@layout/fragment_login" />
 
     <fragment
-        android:id="@+id/nav_reflow"
-        android:name="com.in.trabajo_final_mobil_2026.ui.reflow.ReflowFragment"
-        android:label="@string/menu_reflow"
-        tools:layout="@layout/fragment_reflow" />
-
-    <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.in.trabajo_final_mobil_2026.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
-
-    <fragment
-        android:id="@+id/nav_settings"
-        android:name="com.in.trabajo_final_mobil_2026.ui.settings.SettingsFragment"
-        android:label="@string/menu_settings"
-        tools:layout="@layout/fragment_settings" />
+        android:id="@+id/nav_reparacion"
+        android:name="com.in.trabajo_final_mobil_2026.ui.reparacion.ReparacionFragment"
+        android:label="@string/menu_reparacion"
+        tools:layout="@layout/fragment_reparacion" />
 </navigation>
