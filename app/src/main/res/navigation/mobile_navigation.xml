@@ -9,7 +9,13 @@
         android:id="@+id/nav_login"
         android:name="com.in.trabajo_final_mobil_2026.ui.login.LoginFragment"
         android:label="@string/menu_login"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_login_to_reparacion"
+            app:destination="@id/nav_reparacion"
+            app:popUpTo="@id/nav_login"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_reparacion"

@@ -10,6 +10,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -56,9 +57,16 @@ public class MainActivity extends AppCompatActivity {
             NavigationUI.setupWithNavController(binding.navView, navController);
         }
 
-
-
-
+        // Ocultar drawer y toolbar en la pantalla de login
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            if (destination.getId() == R.id.nav_login) {
+                binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                if (getSupportActionBar() != null) getSupportActionBar().hide();
+            } else {
+                binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                if (getSupportActionBar() != null) getSupportActionBar().show();
+            }
+        });
 
     }
 

@@ -12,12 +12,12 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
 public class ApiClient {
-    public static final String BASE_URL = "";
+    // Debe empezar con http:// (o https://) e incluir el puerto de tu API, y terminar en /
+    // IP de la PC donde corre la API (debe escuchar en 0.0.0.0 y tener el firewall abierto)
+    public static final String BASE_URL = "http://192.168.0.169:5064/";
 
     public static MiServicioMecanico getServicio() {
         Gson gson = new GsonBuilder().setLenient().create();
@@ -32,8 +32,7 @@ public class ApiClient {
     }
 
     public interface MiServicioMecanico{
-        @FormUrlEncoded
-        @POST("/api/Usuario/login")
+        @POST("api/Usuario/login")
         Call<LoginResponse> login(@Body LoginRequest request);
 
 
