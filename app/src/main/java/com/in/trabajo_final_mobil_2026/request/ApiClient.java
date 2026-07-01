@@ -7,16 +7,20 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.in.trabajo_final_mobil_2026.modelo.LoginRequest;
 import com.in.trabajo_final_mobil_2026.modelo.LoginResponse;
+import com.in.trabajo_final_mobil_2026.modelo.Usuario;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 
 public class ApiClient {
-    // Debe empezar con http:// (o https://) e incluir el puerto de tu API, y terminar en /
-    // IP de la PC donde corre la API (debe escuchar en 0.0.0.0 y tener el firewall abierto)
+
     public static final String BASE_URL = "http://192.168.0.169:5064/";
 
     public static MiServicioMecanico getServicio() {
@@ -35,6 +39,8 @@ public class ApiClient {
         @POST("api/Usuario/login")
         Call<LoginResponse> login(@Body LoginRequest request);
 
+        @GET("api/Usuario")
+        Call<List<Usuario>> getUsuarios(@Header("Authorization") String token);
 
 
 

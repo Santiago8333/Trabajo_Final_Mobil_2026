@@ -22,4 +22,9 @@
         android:name="com.in.trabajo_final_mobil_2026.ui.reparacion.ReparacionFragment"
         android:label="@string/menu_reparacion"
         tools:layout="@layout/fragment_reparacion" />
+    <fragment
+        android:id="@+id/nav_usuario"
+        android:name="com.in.trabajo_final_mobil_2026.ui.usuario.UsuarioFragment"
+        android:label="@string/Usuarios"
+        tools:layout="@layout/fragment_usuario" />
 </navigation>
