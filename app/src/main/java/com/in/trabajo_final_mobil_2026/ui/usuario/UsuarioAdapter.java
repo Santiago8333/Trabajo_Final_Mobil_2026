@@ -3,6 +3,7 @@ package com.in.trabajo_final_mobil_2026.ui.usuario;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,12 +16,21 @@ import java.util.List;
 
 public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioViewHolder> {
 
+
+    public interface OnUsuarioClickListener {
+        void onEliminar(Usuario usuario);
+        void onModificar(Usuario usuario);
+        void onCambiarClave(Usuario usuario);
+    }
+
     private final List<Usuario> usuarios;
     private final LayoutInflater inflater;
+    private final OnUsuarioClickListener listener;
 
-    public UsuarioAdapter(List<Usuario> usuarios, LayoutInflater inflater) {
+    public UsuarioAdapter(List<Usuario> usuarios, LayoutInflater inflater, OnUsuarioClickListener listener) {
         this.usuarios = usuarios;
         this.inflater = inflater;
+        this.listener = listener;
     }
 
     @NonNull
@@ -36,6 +46,10 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
         holder.tvNombre.setText(usuario.getNombre() + " " + usuario.getApellido());
         holder.tvEmail.setText(usuario.getEmail());
         holder.tvEspecializacion.setText(usuario.getEspecializacion());
+
+        holder.btnEliminar.setOnClickListener(v -> listener.onEliminar(usuario));
+        holder.btnModificar.setOnClickListener(v -> listener.onModificar(usuario));
+        holder.btnCambiarClave.setOnClickListener(v -> listener.onCambiarClave(usuario));
     }
 
     @Override
@@ -47,12 +61,18 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
         TextView tvNombre;
         TextView tvEmail;
         TextView tvEspecializacion;
+        ImageButton btnEliminar;
+        ImageButton btnModificar;
+        ImageButton btnCambiarClave;
 
         public UsuarioViewHolder(@NonNull View itemView) {
             super(itemView);
             tvNombre = itemView.findViewById(R.id.tvNombre);
             tvEmail = itemView.findViewById(R.id.tvEmail);
             tvEspecializacion = itemView.findViewById(R.id.tvEspecializacion);
+            btnEliminar = itemView.findViewById(R.id.btnEliminar);
+            btnModificar = itemView.findViewById(R.id.btnModificar);
+            btnCambiarClave = itemView.findViewById(R.id.btnCambiarClave);
         }
     }
 }

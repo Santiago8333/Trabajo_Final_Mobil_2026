@@ -39,6 +39,42 @@
             tools:text="mecanico"
             xmlns:tools="http://schemas.android.com/tools" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="end"
+            android:orientation="horizontal"
+            xmlns:tools="http://schemas.android.com/tools">
+
+            <ImageButton
+                android:id="@+id/btnCambiarClave"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Cambiar clave"
+                android:src="@drawable/ic_cambiar_clave" />
+
+            <ImageButton
+                android:id="@+id/btnModificar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Modificar"
+                android:src="@drawable/ic_modificar" />
+
+            <ImageButton
+                android:id="@+id/btnEliminar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Eliminar"
+                android:src="@drawable/ic_eliminar" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
