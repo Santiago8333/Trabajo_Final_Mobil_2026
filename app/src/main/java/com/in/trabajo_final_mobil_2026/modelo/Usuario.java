@@ -11,6 +11,15 @@ public class Usuario implements Serializable {
     private String email;
     private int rol;
     private String fecha_Creacion;
+    private String clave;
+
+    public String getClave() {
+        return clave;
+    }
+
+    public void setClave(String clave) {
+        this.clave = clave;
+    }
 
     public int getId_Usuario() {
         return id_Usuario;
