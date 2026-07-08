@@ -63,7 +63,8 @@ public class UsuarioFragment extends Fragment implements UsuarioAdapter.OnUsuari
                 .setTitle("Eliminar usuario")
                 .setMessage("¿Seguro que desea eliminar a " + usuario.getNombre() + "?")
                 .setPositiveButton("Eliminar", (dialog, which) -> {
-                    // TODO: llamar al endpoint de eliminar usuario con usuario.getId_Usuario()
+
+
                     Toast.makeText(getContext(), "Eliminado (pendiente API)", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("Cancelar", null)
