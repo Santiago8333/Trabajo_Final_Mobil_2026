@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.in.trabajo_final_mobil_2026.modelo.AvatarResponse;
 import com.in.trabajo_final_mobil_2026.modelo.ClaveRequest;
 import com.in.trabajo_final_mobil_2026.modelo.LoginRequest;
 import com.in.trabajo_final_mobil_2026.modelo.LoginResponse;
@@ -12,6 +13,7 @@ import com.in.trabajo_final_mobil_2026.modelo.Usuario;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -19,8 +21,10 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 public class ApiClient {
@@ -69,6 +73,13 @@ public class ApiClient {
         @DELETE("api/Usuario/{id}")
         Call<Void> eliminarUsuario(@Header("Authorization") String token,
                                    @Path("id") int id);
+
+        //subir avatar (multipart/form-data)
+        @Multipart
+        @POST("api/Usuario/{id}/avatar")
+        Call<AvatarResponse> subirAvatar(@Header("Authorization") String token,
+                                         @Path("id") int id,
+                                         @Part MultipartBody.Part archivo);
     }
 
 

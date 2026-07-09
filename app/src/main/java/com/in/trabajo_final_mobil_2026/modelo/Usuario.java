@@ -11,6 +11,7 @@ public class Usuario implements Serializable {
     private String email;
     private int rol;
     private String fecha_Creacion;
+    private String avatar;
     private String clave;
 
     public String getClave() {
@@ -75,5 +76,13 @@ public class Usuario implements Serializable {
 
     public void setFecha_Creacion(String fecha_Creacion) {
         this.fecha_Creacion = fecha_Creacion;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

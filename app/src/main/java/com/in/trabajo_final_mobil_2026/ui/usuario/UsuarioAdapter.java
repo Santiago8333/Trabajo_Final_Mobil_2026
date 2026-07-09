@@ -21,6 +21,7 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
         void onEliminar(Usuario usuario);
         void onModificar(Usuario usuario);
         void onCambiarClave(Usuario usuario);
+        void onSubirAvatar(Usuario usuario);
     }
 
     private final List<Usuario> usuarios;
@@ -50,6 +51,7 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
         holder.btnEliminar.setOnClickListener(v -> listener.onEliminar(usuario));
         holder.btnModificar.setOnClickListener(v -> listener.onModificar(usuario));
         holder.btnCambiarClave.setOnClickListener(v -> listener.onCambiarClave(usuario));
+        holder.btnAvatar.setOnClickListener(v -> listener.onSubirAvatar(usuario));
     }
 
     @Override
@@ -64,6 +66,7 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
         ImageButton btnEliminar;
         ImageButton btnModificar;
         ImageButton btnCambiarClave;
+        ImageButton btnAvatar;
 
         public UsuarioViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -73,6 +76,7 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
             btnEliminar = itemView.findViewById(R.id.btnEliminar);
             btnModificar = itemView.findViewById(R.id.btnModificar);
             btnCambiarClave = itemView.findViewById(R.id.btnCambiarClave);
+            btnAvatar = itemView.findViewById(R.id.btnAvatar);
         }
     }
 }

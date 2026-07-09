@@ -1,19 +1,33 @@
 package com.in.trabajo_final_mobil_2026.ui.usuario;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.Application;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.in.trabajo_final_mobil_2026.modelo.AvatarResponse;
 import com.in.trabajo_final_mobil_2026.modelo.ClaveRequest;
 import com.in.trabajo_final_mobil_2026.modelo.Usuario;
 import com.in.trabajo_final_mobil_2026.request.ApiClient;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,6 +36,7 @@ public class UsuarioViewModel extends AndroidViewModel {
 
     private final MutableLiveData<List<Usuario>> listaUsuarios = new MutableLiveData<>();
     private final MutableLiveData<String> mensaje = new MutableLiveData<>();
+    private final MutableLiveData<Uri> imagenSeleccionadaM = new MutableLiveData<>();
 
     public UsuarioViewModel(@NonNull Application application) {
         super(application);
@@ -33,6 +48,18 @@ public class UsuarioViewModel extends AndroidViewModel {
 
     public MutableLiveData<String> getMensaje() {
         return mensaje;
+    }
+
+    public MutableLiveData<Uri> getImagenSeleccionada() {
+        return imagenSeleccionadaM;
+    }
+
+    public void recibirFoto(ActivityResult result) {
+        if (result.getResultCode() == RESULT_OK) {
+            Intent data = result.getData();
+            Uri uri = data.getData();
+            imagenSeleccionadaM.setValue(uri);
+        }
     }
 
     public void ObtenerUsuarios() {
@@ -153,7 +180,62 @@ public void EliminarUsuario(int id){
 
     }
 
+    public void SubirAvatar(int id) {
+        byte[] imagen = transformarImagen();
+        if (imagen.length == 0) {
+            mensaje.setValue("Debe ingresar una imagen");
+            return;
+        }
 
+        RequestBody requestFile = RequestBody.create(imagen, MediaType.parse("image/jpeg"));
+        // "archivo" DEBE coincidir con el nombre que pide la API
+        MultipartBody.Part imagenPart = MultipartBody.Part.createFormData(
+                "archivo", "usuario_" + id + ".jpg", requestFile);
 
+        String token = ApiClient.leerToken(getApplication());
+        ApiClient.MiServicioMecanico servicio = ApiClient.getServicio();
+        Call<AvatarResponse> call = servicio.subirAvatar(token, id, imagenPart);
 
+        call.enqueue(new Callback<AvatarResponse>() {
+            @Override
+            public void onResponse(Call<AvatarResponse> call, Response<AvatarResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    mensaje.setValue("Avatar actualizado");
+                } else {
+                    Log.d("ErrorUsuario", "codigo avatar: " + response.code());
+                    mensaje.setValue("No se pudo subir el avatar");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AvatarResponse> call, Throwable t) {
+                Log.d("ErrorUsuario", t.getMessage());
+                mensaje.setValue("Error de conexión");
+            }
+        });
+    }
+
+    // pasar la imagen seleccionada a bytes (JPEG)
+    private byte[] transformarImagen() {
+        try {
+            Uri uri = imagenSeleccionadaM.getValue();
+            if (uri == null) {
+                mensaje.setValue("Debe ingresar una foto");
+                return new byte[]{};
+            }
+
+            InputStream inputStream = getApplication().getContentResolver().openInputStream(uri);
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            return byteArrayOutputStream.toByteArray();
+
+        } catch (FileNotFoundException ex) {
+            mensaje.setValue("Archivo de imagen no encontrado");
+            return new byte[]{};
+        } catch (Exception e) {
+            mensaje.setValue("Error al procesar la imagen");
+            return new byte[]{};
+        }
+    }
 }

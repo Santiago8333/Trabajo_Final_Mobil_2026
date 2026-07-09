@@ -48,9 +48,18 @@
             xmlns:tools="http://schemas.android.com/tools">
 
             <ImageButton
+                android:id="@+id/btnAvatar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Subir avatar"
+                android:src="@drawable/ic_camera_black_24dp" />
+
+            <ImageButton
                 android:id="@+id/btnCambiarClave"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:layout_marginStart="8dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Cambiar clave"
                 android:src="@drawable/ic_cambiar_clave" />
