@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -86,9 +87,44 @@ public class UsuarioFragment extends Fragment implements UsuarioAdapter.OnUsuari
             }
         });
 
+        // mostrar los mensajes del ViewModel
+        mv.getMensaje().observe(getViewLifecycleOwner(), msg -> b.tvMensaje.setText(msg));
+
+        // botón flotante para crear usuario
+        b.fabCrearUsuario.setOnClickListener(v -> mostrarDialogoCrear());
+
         mv.ObtenerUsuarios();
 
         return b.getRoot();
+    }
+
+    private void mostrarDialogoCrear() {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_crear_usuario, null);
+
+        TextInputEditText edNombre = dialogView.findViewById(R.id.edCrearNombre);
+        TextInputEditText edApellido = dialogView.findViewById(R.id.edCrearApellido);
+        TextInputEditText edEspecializacion = dialogView.findViewById(R.id.edCrearEspecializacion);
+        TextInputEditText edEmail = dialogView.findViewById(R.id.edCrearEmail);
+        TextInputEditText edClave = dialogView.findViewById(R.id.edCrearClave);
+        Spinner spRol = dialogView.findViewById(R.id.spCrearRol);
+
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Crear usuario")
+                .setView(dialogView)
+                .setPositiveButton("Crear", (dialog, which) -> {
+                    // posición 0 = Administrador (1), posición 1 = Empleado (2)
+                    String rol = String.valueOf(spRol.getSelectedItemPosition() + 1);
+                    mv.CrearUsuario(
+                            edNombre.getText().toString(),
+                            edApellido.getText().toString(),
+                            edEspecializacion.getText().toString(),
+                            edEmail.getText().toString(),
+                            rol,
+                            edClave.getText().toString()
+                    );
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
     }
 
     @Override

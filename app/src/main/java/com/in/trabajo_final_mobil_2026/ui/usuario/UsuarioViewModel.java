@@ -137,8 +137,6 @@ public void EliminarUsuario(int id){
             }
         });
 
-
-
     }
 
     public void CambiarClave(int id, String clave){
@@ -175,9 +173,54 @@ public void EliminarUsuario(int id){
         });
     }
 
-    public void CrearUsuario(){
+    public void CrearUsuario(String nombre, String apellido, String especializacion,
+                             String email, String rol, String clave){
 
+        if (nombre.isEmpty() || apellido.isEmpty() || especializacion.isEmpty()
+                || email.isEmpty() || rol.isEmpty() || clave.isEmpty()) {
+            mensaje.setValue("Datos Faltantes");
+            return;
+        }
 
+        try{
+            Usuario u = new Usuario();
+            u.setNombre(nombre);
+            u.setApellido(apellido);
+            u.setEspecializacion(especializacion);
+            u.setEmail(email);
+            u.setRol(Integer.parseInt(rol));
+            u.setClave(clave);
+
+            String token = ApiClient.leerToken(getApplication());
+            ApiClient.MiServicioMecanico servicio = ApiClient.getServicio();
+            Call<Void> call = servicio.crearUsuario(token, u);
+
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        mensaje.setValue("Usuario creado correctamente");
+                    } else if (response.code() == 409) {
+                        mensaje.setValue("El email ya está registrado");
+                    } else if (response.code() == 401 || response.code() == 403) {
+                        mensaje.setValue("No autorizado");
+                    } else {
+                        Log.d("ErrorUsuario", "codigo crear: " + response.code());
+                        mensaje.setValue("No se pudo crear el usuario");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    Log.d("ErrorUsuario", t.getMessage());
+                    mensaje.setValue("Error de conexión");
+                }
+            });
+
+        }catch (NumberFormatException e){
+            Log.d("ErrorUsuario", e.getMessage());
+            mensaje.setValue("Error: el Rol debe ser un número (1 o 2)");
+        }
     }
 
     public void SubirAvatar(int id) {

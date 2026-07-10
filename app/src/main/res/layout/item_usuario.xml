@@ -11,7 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        xmlns:tools="http://schemas.android.com/tools">
+
+        <ImageView
+            android:id="@+id/ivFoto"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="Avatar"
+            tools:src="@drawable/avatar_1" />
 
         <TextView
             android:id="@+id/tvNombre"
@@ -19,8 +30,7 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textStyle="bold"
-            tools:text="Nombre Apellido"
-            xmlns:tools="http://schemas.android.com/tools" />
+            tools:text="Nombre Apellido" />
 
         <TextView
             android:id="@+id/tvEmail"

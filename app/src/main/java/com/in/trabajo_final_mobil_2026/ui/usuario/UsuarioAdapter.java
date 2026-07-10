@@ -4,13 +4,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.in.trabajo_final_mobil_2026.R;
 import com.in.trabajo_final_mobil_2026.modelo.Usuario;
+import com.in.trabajo_final_mobil_2026.request.ApiClient;
 
 import java.util.List;
 
@@ -48,6 +51,14 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
         holder.tvEmail.setText(usuario.getEmail());
         holder.tvEspecializacion.setText(usuario.getEspecializacion());
 
+        // ruta completa: http://IP:puerto/avatars/usuario_x.jpg
+        String urlFinal = ApiClient.BASE_URL + usuario.getAvatar();
+        Glide.with(holder.itemView.getContext())
+                .load(urlFinal)
+                .placeholder(R.drawable.avatar_1)
+                .error(R.drawable.avatar_1)
+                .into(holder.ivFoto);
+
         holder.btnEliminar.setOnClickListener(v -> listener.onEliminar(usuario));
         holder.btnModificar.setOnClickListener(v -> listener.onModificar(usuario));
         holder.btnCambiarClave.setOnClickListener(v -> listener.onCambiarClave(usuario));
@@ -60,6 +71,7 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
     }
 
     static class UsuarioViewHolder extends RecyclerView.ViewHolder {
+        ImageView ivFoto;
         TextView tvNombre;
         TextView tvEmail;
         TextView tvEspecializacion;
@@ -70,6 +82,7 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
 
         public UsuarioViewHolder(@NonNull View itemView) {
             super(itemView);
+            ivFoto = itemView.findViewById(R.id.ivFoto);
             tvNombre = itemView.findViewById(R.id.tvNombre);
             tvEmail = itemView.findViewById(R.id.tvEmail);
             tvEspecializacion = itemView.findViewById(R.id.tvEspecializacion);

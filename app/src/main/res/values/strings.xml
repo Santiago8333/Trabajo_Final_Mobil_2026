@@ -21,4 +21,9 @@
         item
     </string>
     <string name="Usuarios">Usuarios</string>
+
+    <string-array name="roles">
+        <item>Administrador</item>
+        <item>Empleado</item>
+    </string-array>
 </resources>
