@@ -112,6 +112,7 @@ public void EliminarUsuario(int id){
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     mensaje.setValue("Usuario Eliminado");
+                    ObtenerUsuarios();
                 } else {
                     try{
 
@@ -200,6 +201,7 @@ public void EliminarUsuario(int id){
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if (response.isSuccessful()) {
                         mensaje.setValue("Usuario creado correctamente");
+                        ObtenerUsuarios();
                     } else if (response.code() == 409) {
                         mensaje.setValue("El email ya está registrado");
                     } else if (response.code() == 401 || response.code() == 403) {
@@ -207,6 +209,59 @@ public void EliminarUsuario(int id){
                     } else {
                         Log.d("ErrorUsuario", "codigo crear: " + response.code());
                         mensaje.setValue("No se pudo crear el usuario");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    Log.d("ErrorUsuario", t.getMessage());
+                    mensaje.setValue("Error de conexión");
+                }
+            });
+
+        }catch (NumberFormatException e){
+            Log.d("ErrorUsuario", e.getMessage());
+            mensaje.setValue("Error: el Rol debe ser un número (1 o 2)");
+        }
+    }
+
+    public void ModificarUsuario(int id, String nombre, String apellido, String especializacion,
+                                 String email, String rol){
+
+        if (nombre.isEmpty() || apellido.isEmpty() || especializacion.isEmpty()
+                || email.isEmpty() || rol.isEmpty()) {
+            mensaje.setValue("Datos Faltantes");
+            return;
+        }
+
+        try{
+            Usuario u = new Usuario();
+            u.setNombre(nombre);
+            u.setApellido(apellido);
+            u.setEspecializacion(especializacion);
+            u.setEmail(email);
+            u.setRol(Integer.parseInt(rol));
+
+
+            String token = ApiClient.leerToken(getApplication());
+            ApiClient.MiServicioMecanico servicio = ApiClient.getServicio();
+            Call<Void> call = servicio.actualizarUsuario(token, id, u);
+
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        mensaje.setValue("Usuario actualizado");
+                        ObtenerUsuarios();
+                    } else if (response.code() == 404) {
+                        mensaje.setValue("El usuario no existe");
+                    } else if (response.code() == 409) {
+                        mensaje.setValue("El email ya pertenece a otro usuario");
+                    } else if (response.code() == 401 || response.code() == 403) {
+                        mensaje.setValue("No autorizado");
+                    } else {
+                        Log.d("ErrorUsuario", "codigo modificar: " + response.code());
+                        mensaje.setValue("No se pudo actualizar el usuario");
                     }
                 }
 
@@ -244,6 +299,7 @@ public void EliminarUsuario(int id){
             public void onResponse(Call<AvatarResponse> call, Response<AvatarResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     mensaje.setValue("Avatar actualizado");
+                    ObtenerUsuarios();
                 } else {
                     Log.d("ErrorUsuario", "codigo avatar: " + response.code());
                     mensaje.setValue("No se pudo subir el avatar");

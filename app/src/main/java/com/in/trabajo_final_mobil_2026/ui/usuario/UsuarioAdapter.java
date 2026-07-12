@@ -50,6 +50,7 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
         holder.tvNombre.setText(usuario.getNombre() + " " + usuario.getApellido());
         holder.tvEmail.setText(usuario.getEmail());
         holder.tvEspecializacion.setText(usuario.getEspecializacion());
+        holder.tvFecha.setText("Creado: " + usuario.getFecha_Creacion());
 
         // ruta completa: http://IP:puerto/avatars/usuario_x.jpg
         String urlFinal = ApiClient.BASE_URL + usuario.getAvatar();
@@ -75,6 +76,7 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
         TextView tvNombre;
         TextView tvEmail;
         TextView tvEspecializacion;
+        TextView tvFecha;
         ImageButton btnEliminar;
         ImageButton btnModificar;
         ImageButton btnCambiarClave;
@@ -86,6 +88,7 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
             tvNombre = itemView.findViewById(R.id.tvNombre);
             tvEmail = itemView.findViewById(R.id.tvEmail);
             tvEspecializacion = itemView.findViewById(R.id.tvEspecializacion);
+            tvFecha = itemView.findViewById(R.id.tvFecha);
             btnEliminar = itemView.findViewById(R.id.btnEliminar);
             btnModificar = itemView.findViewById(R.id.btnModificar);
             btnCambiarClave = itemView.findViewById(R.id.btnCambiarClave);

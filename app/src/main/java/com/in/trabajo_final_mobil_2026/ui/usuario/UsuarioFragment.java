@@ -148,22 +148,28 @@ public class UsuarioFragment extends Fragment implements UsuarioAdapter.OnUsuari
         TextInputEditText edApellido = dialogView.findViewById(R.id.edDlgApellido);
         TextInputEditText edEmail = dialogView.findViewById(R.id.edDlgEmail);
         TextInputEditText edEspecializacion = dialogView.findViewById(R.id.edDlgEspecializacion);
+        Spinner spRol = dialogView.findViewById(R.id.spDlgRol);
 
         edNombre.setText(usuario.getNombre());
         edApellido.setText(usuario.getApellido());
         edEmail.setText(usuario.getEmail());
         edEspecializacion.setText(usuario.getEspecializacion());
+        // preseleccionar el rol actual: rol 1 -> posición 0, rol 2 -> posición 1
+        spRol.setSelection(usuario.getRol() - 1);
 
         new AlertDialog.Builder(requireContext())
                 .setTitle("Modificar usuario")
                 .setView(dialogView)
                 .setPositiveButton("Guardar", (dialog, which) -> {
-                    usuario.setNombre(edNombre.getText().toString());
-                    usuario.setApellido(edApellido.getText().toString());
-                    usuario.setEmail(edEmail.getText().toString());
-                    usuario.setEspecializacion(edEspecializacion.getText().toString());
-                    // TODO: llamar al endpoint de actualizar usuario con estos datos
-                    Toast.makeText(getContext(), "Guardado (pendiente API)", Toast.LENGTH_SHORT).show();
+                    String rol = String.valueOf(spRol.getSelectedItemPosition() + 1);
+                    mv.ModificarUsuario(
+                            usuario.getId_Usuario(),
+                            edNombre.getText().toString(),
+                            edApellido.getText().toString(),
+                            edEspecializacion.getText().toString(),
+                            edEmail.getText().toString(),
+                            rol
+                    );
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
@@ -183,7 +189,7 @@ public class UsuarioFragment extends Fragment implements UsuarioAdapter.OnUsuari
                         Toast.makeText(getContext(), "La clave no puede estar vacía", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    // TODO: llamar al endpoint de cambiar clave con usuario.getId_Usuario() y nuevaClave
+                    mv.CambiarClave(usuario.getId_Usuario(),nuevaClave);
                     Toast.makeText(getContext(), "Clave cambiada (pendiente API)", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("Cancelar", null)
