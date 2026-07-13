@@ -50,7 +50,7 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
         holder.tvNombre.setText(usuario.getNombre() + " " + usuario.getApellido());
         holder.tvEmail.setText(usuario.getEmail());
         holder.tvEspecializacion.setText(usuario.getEspecializacion());
-        holder.tvFecha.setText("Creado: " + usuario.getFecha_Creacion());
+        holder.tvFecha.setText("Creado: " + formatearFecha(usuario.getFecha_Creacion()));
 
         // ruta completa: http://IP:puerto/avatars/usuario_x.jpg
         String urlFinal = ApiClient.BASE_URL + usuario.getAvatar();
@@ -69,6 +69,24 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
     @Override
     public int getItemCount() {
         return usuarios != null ? usuarios.size() : 0;
+    }
+
+    // convierte "2026-07-14" a "14/7/2026"
+    private String formatearFecha(String fecha) {
+        if (fecha == null || fecha.isEmpty()) return "";
+        try {
+            String soloFecha = fecha.split("T")[0].split(" ")[0];
+            String[] p = soloFecha.split("-");                    // [yyyy, MM, dd]
+            if (p.length == 3) {
+                int anio = Integer.parseInt(p[0]);
+                int mes = Integer.parseInt(p[1]);
+                int dia = Integer.parseInt(p[2]);
+                return dia + "/" + mes + "/" + anio;
+            }
+        } catch (Exception e) {
+            return fecha;
+        }
+        return fecha;
     }
 
     static class UsuarioViewHolder extends RecyclerView.ViewHolder {
