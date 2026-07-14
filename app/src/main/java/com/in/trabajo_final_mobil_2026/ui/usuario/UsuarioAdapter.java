@@ -75,7 +75,7 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioV
     private String formatearFecha(String fecha) {
         if (fecha == null || fecha.isEmpty()) return "";
         try {
-            String soloFecha = fecha.split("T")[0].split(" ")[0];
+            String soloFecha = fecha.split("T")[0].split(" ")[0]; //se queda con solo la fecha
             String[] p = soloFecha.split("-");                    // [yyyy, MM, dd]
             if (p.length == 3) {
                 int anio = Integer.parseInt(p[0]);
