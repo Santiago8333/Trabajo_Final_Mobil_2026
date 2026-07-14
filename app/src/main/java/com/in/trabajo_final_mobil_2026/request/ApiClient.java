@@ -9,6 +9,7 @@ import com.in.trabajo_final_mobil_2026.modelo.AvatarResponse;
 import com.in.trabajo_final_mobil_2026.modelo.ClaveRequest;
 import com.in.trabajo_final_mobil_2026.modelo.LoginRequest;
 import com.in.trabajo_final_mobil_2026.modelo.LoginResponse;
+import com.in.trabajo_final_mobil_2026.modelo.Stock;
 import com.in.trabajo_final_mobil_2026.modelo.Usuario;
 
 import java.util.List;
@@ -80,6 +81,37 @@ public class ApiClient {
         Call<AvatarResponse> subirAvatar(@Header("Authorization") String token,
                                          @Path("id") int id,
                                          @Part MultipartBody.Part archivo);
+
+        //obtener lista de stock
+        @GET("api/Stock")
+        Call<List<Stock>> getStocks(@Header("Authorization") String token);
+
+        //obtener stock por id
+        @GET("api/Stock/{id}")
+        Call<Stock> getStock(@Header("Authorization") String token,
+                             @Path("id") int id);
+
+        //crear stock
+        @POST("api/Stock")
+        Call<Void> crearStock(@Header("Authorization") String token,
+                              @Body Stock stock);
+
+        //actualizar stock
+        @PUT("api/Stock/{id}")
+        Call<Void> actualizarStock(@Header("Authorization") String token,
+                                   @Path("id") int id,
+                                   @Body Stock stock);
+
+        //eliminar stock
+        @DELETE("api/Stock/{id}")
+        Call<Void> eliminarStock(@Header("Authorization") String token,
+                                 @Path("id") int id);
+
+
+
+
+
+
     }
 
 
