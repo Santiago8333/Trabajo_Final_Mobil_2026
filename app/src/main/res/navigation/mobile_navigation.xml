@@ -27,4 +27,9 @@
         android:name="com.in.trabajo_final_mobil_2026.ui.usuario.UsuarioFragment"
         android:label="@string/Usuarios"
         tools:layout="@layout/fragment_usuario" />
+    <fragment
+        android:id="@+id/nav_stock"
+        android:name="com.in.trabajo_final_mobil_2026.ui.stock.StockFragment"
+        android:label="@string/Stock"
+        tools:layout="@layout/fragment_stock" />
 </navigation>

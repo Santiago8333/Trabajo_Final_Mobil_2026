@@ -21,6 +21,7 @@
         item
     </string>
     <string name="Usuarios">Usuarios</string>
+    <string name="Stock">Stock</string>
 
     <string-array name="roles">
         <item>Administrador</item>
