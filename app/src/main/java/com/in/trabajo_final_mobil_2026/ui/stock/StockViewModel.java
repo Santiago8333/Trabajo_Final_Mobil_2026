@@ -113,7 +113,7 @@ public class StockViewModel extends AndroidViewModel {
             s.setNombre_Pieza(nombre);
             s.setCantidad_Stock(Integer.parseInt(cantidad));
             s.setPrecio_Unitario(Double.parseDouble(precio));
-            // no se envía Fecha_Creacion: la actualización no la modifica
+
 
             String token = ApiClient.leerToken(getApplication());
             Call<Void> call = ApiClient.getServicio().actualizarStock(token, id, s);
