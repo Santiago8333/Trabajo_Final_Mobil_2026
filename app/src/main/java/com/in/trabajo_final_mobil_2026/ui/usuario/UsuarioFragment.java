@@ -6,7 +6,11 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -40,6 +44,10 @@ public class UsuarioFragment extends Fragment implements UsuarioAdapter.OnUsuari
     private UsuarioViewModel mv;
 
     private ImageView avatarPreview;
+
+    // para el debounce de la búsqueda
+    private final Handler handlerBusqueda = new Handler(Looper.getMainLooper());
+    private Runnable buscarRunnable = () -> { };
 
     private ActivityResultLauncher<Intent> selector;
     private Intent intent;
@@ -92,6 +100,25 @@ public class UsuarioFragment extends Fragment implements UsuarioAdapter.OnUsuari
 
         // botón flotante para crear usuario
         b.fabCrearUsuario.setOnClickListener(v -> mostrarDialogoCrear());
+
+        // buscar mientras se escribe, con debounce de 400ms
+        b.edBuscar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String texto = s.toString();
+                // cancela la búsqueda pendiente anterior
+                handlerBusqueda.removeCallbacks(buscarRunnable);
+                buscarRunnable = () -> mv.BuscarUsuarios(texto);
+                // programa la búsqueda 400ms después de la última tecla
+                handlerBusqueda.postDelayed(buscarRunnable, 400);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
 
         mv.ObtenerUsuarios();
 

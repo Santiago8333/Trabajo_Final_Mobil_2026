@@ -27,6 +27,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public class ApiClient {
 
@@ -108,8 +109,10 @@ public class ApiClient {
                                  @Path("id") int id);
 
 
-
-
+        //buscar usuario por email nombre apellido
+        @GET("api/Usuario/buscar")
+        Call<List<Usuario>> getBuscar(@Header("Authorization") String token,
+                                      @Query("texto") String texto);
 
 
     }

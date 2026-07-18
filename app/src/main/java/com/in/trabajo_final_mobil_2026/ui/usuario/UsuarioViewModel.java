@@ -101,6 +101,34 @@ public class UsuarioViewModel extends AndroidViewModel {
         });
     }
 
+    public void BuscarUsuarios(String texto) {
+
+        if (texto == null || texto.trim().isEmpty()) {
+            ObtenerUsuarios();
+            return;
+        }
+
+        String token = ApiClient.leerToken(getApplication());
+        Call<List<Usuario>> call = ApiClient.getServicio().getBuscar(token, texto);
+
+        call.enqueue(new Callback<List<Usuario>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Usuario>> call,
+                                   @NonNull Response<List<Usuario>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    listaUsuarios.setValue(response.body());
+                } else {
+                    Log.d("ErrorUsuario", "codigo buscar: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Usuario>> call, @NonNull Throwable t) {
+                Log.d("ErrorUsuario", t.getMessage());
+            }
+        });
+    }
+
 public void EliminarUsuario(int id){
         String token = ApiClient.leerToken(getApplication());
 
