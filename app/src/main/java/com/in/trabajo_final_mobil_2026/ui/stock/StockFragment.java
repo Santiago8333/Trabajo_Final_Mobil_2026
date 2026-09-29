@@ -10,6 +10,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +27,10 @@ import com.in.trabajo_final_mobil_2026.modelo.Stock;
 public class StockFragment extends Fragment implements StockAdapter.OnStockClickListener {
     private FragmentStockBinding b;
     private StockViewModel mv;
+
+    // para el debounce de la búsqueda
+    private final Handler handlerBusqueda = new Handler(Looper.getMainLooper());
+    private Runnable buscarRunnable = () -> { };
 
     public static StockFragment newInstance() {
         return new StockFragment();
@@ -44,6 +52,25 @@ public class StockFragment extends Fragment implements StockAdapter.OnStockClick
         b.fabCrearStock.setOnClickListener(v -> mostrarDialogoStock(null));
 
         mv.ObtenerStock();
+
+        // buscar mientras se escribe, con debounce de 400ms
+        b.edBuscarStock.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String texto = s.toString();
+                // cancela la búsqueda pendiente anterior
+                handlerBusqueda.removeCallbacks(buscarRunnable);
+                buscarRunnable = () -> mv.BuscarStocks(texto);
+                // programa la búsqueda 400ms después de la última tecla
+                handlerBusqueda.postDelayed(buscarRunnable, 400);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
 
         return b.getRoot();
     }

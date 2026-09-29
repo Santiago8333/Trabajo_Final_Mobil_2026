@@ -31,7 +31,7 @@ import retrofit2.http.Query;
 
 public class ApiClient {
 
-    public static final String BASE_URL = "http://192.168.0.169:5064/";
+    public static final String BASE_URL = "https://mecanicomax.runasp.net/";
 
     public static MiServicioMecanico getServicio() {
         Gson gson = new GsonBuilder().setLenient().create();
@@ -113,6 +113,14 @@ public class ApiClient {
         @GET("api/Usuario/buscar")
         Call<List<Usuario>> getBuscar(@Header("Authorization") String token,
                                       @Query("texto") String texto);
+
+        //buscar stock por nombre de pieza
+        @GET("api/Stock/buscar")
+        Call<List<Stock>> getBuscarStock(@Header("Authorization") String token,
+                                      @Query("texto") String texto);
+
+
+
 
 
     }

@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.in.trabajo_final_mobil_2026.modelo.Stock;
+import com.in.trabajo_final_mobil_2026.modelo.Usuario;
 import com.in.trabajo_final_mobil_2026.request.ApiClient;
 
 import java.text.SimpleDateFormat;
@@ -173,4 +174,37 @@ public class StockViewModel extends AndroidViewModel {
             }
         });
     }
+
+    public void BuscarStocks(String texto) {
+        if (texto == null || texto.trim().isEmpty()) {
+            ObtenerStock();
+            return;
+        }
+        String token = ApiClient.leerToken(getApplication());
+        Call<List<Stock>> call = ApiClient.getServicio().getBuscarStock(token, texto);
+
+        call.enqueue(new Callback<List<Stock>>() {
+            @Override
+            public void onResponse(Call<List<Stock>> call, Response<List<Stock>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    listaStock.setValue(response.body());
+                } else {
+                    Log.d("ErrorStock", "codigo buscar: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Stock>> call, Throwable t) {
+                Log.d("ErrorStock", t.getMessage());
+            }
+        });
+
+
+
+
+
+
+
+    }
+
 }
