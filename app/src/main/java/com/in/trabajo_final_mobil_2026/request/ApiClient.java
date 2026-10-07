@@ -9,6 +9,7 @@ import com.in.trabajo_final_mobil_2026.modelo.AvatarResponse;
 import com.in.trabajo_final_mobil_2026.modelo.ClaveRequest;
 import com.in.trabajo_final_mobil_2026.modelo.LoginRequest;
 import com.in.trabajo_final_mobil_2026.modelo.LoginResponse;
+import com.in.trabajo_final_mobil_2026.modelo.Reparacion;
 import com.in.trabajo_final_mobil_2026.modelo.Stock;
 import com.in.trabajo_final_mobil_2026.modelo.Usuario;
 
@@ -119,6 +120,24 @@ public class ApiClient {
         Call<List<Stock>> getBuscarStock(@Header("Authorization") String token,
                                       @Query("texto") String texto);
 
+        //reparacion obtener
+        @GET("api/Reparacion")
+        Call<List<Reparacion>> getReparacions(@Header("Authorization") String token);
+
+        //buscar reparacion
+        @GET("api/Reparacion/buscar")
+        Call<List<Reparacion>> getBuscarReparacion(@Header("Authorization") String token,
+                                      @Query("texto") String texto);
+
+        //crear reparacion
+        @POST("api/Reparacion")
+        Call<Void> crearReparacion(@Header("Authorization") String token,
+                                @Body Reparacion reparacion);
+
+        //eliminar reparacion
+        @DELETE("api/Reparacion/{id}")
+        Call<Void> eliminarReparacion(@Header("Authorization") String token,
+                                 @Path("id") int id);
 
 
 
