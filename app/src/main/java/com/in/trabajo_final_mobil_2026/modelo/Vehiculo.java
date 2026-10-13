@@ -1,10 +1,17 @@
 package com.in.trabajo_final_mobil_2026.modelo;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class Vehiculo implements Serializable {
+    @SerializedName(value = "id_Vehiculo", alternate = {"Id_Vehiculo"})
     private int id_Vehiculo;
-    public String Modelo;
+
+    @SerializedName(value = "modelo", alternate = {"Modelo"})
+    private String Modelo;
+
+    @SerializedName(value = "fecha_Creacion", alternate = {"Fecha_Creacion"})
     private String Fecha_Creacion;
 
     public int getId_Vehiculo() {

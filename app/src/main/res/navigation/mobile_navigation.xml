@@ -32,4 +32,9 @@
         android:name="com.in.trabajo_final_mobil_2026.ui.stock.StockFragment"
         android:label="@string/Stock"
         tools:layout="@layout/fragment_stock" />
+    <fragment
+        android:id="@+id/nav_vehiculo"
+        android:name="com.in.trabajo_final_mobil_2026.ui.vehiculo.VehiculoFragment"
+        android:label="@string/Vehiculo"
+        tools:layout="@layout/fragment_vehiculo" />
 </navigation>

@@ -16,5 +16,10 @@
             android:id="@+id/nav_stock"
             android:icon="@drawable/ic_gallery_black_24dp"
             android:title="@string/Stock" />
+        <item
+            android:id="@+id/nav_vehiculo"
+            android:icon="@drawable/ic_gallery_black_24dp"
+            android:title="@string/Vehiculo" />
+
     </group>
 </menu>
