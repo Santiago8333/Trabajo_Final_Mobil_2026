@@ -12,6 +12,7 @@ import com.in.trabajo_final_mobil_2026.modelo.LoginResponse;
 import com.in.trabajo_final_mobil_2026.modelo.Reparacion;
 import com.in.trabajo_final_mobil_2026.modelo.Stock;
 import com.in.trabajo_final_mobil_2026.modelo.Usuario;
+import com.in.trabajo_final_mobil_2026.modelo.Vehiculo;
 
 import java.util.List;
 
@@ -139,9 +140,29 @@ public class ApiClient {
         Call<Void> eliminarReparacion(@Header("Authorization") String token,
                                  @Path("id") int id);
 
+        //obtener vehiculos
+        @GET("api/Vehiculo")
+        Call<List<Vehiculo>> getVehiculo(@Header("Authorization") String token);
 
+        //eliminar vehiculo
+        @DELETE("api/Vehiculo/{id}")
+        Call<Void> eliminarVehiculo(@Header("Authorization") String token,
+                                      @Path("id") int id);
+        //crear vehiculo
+        @POST("api/Vehiculo")
+        Call<Void> crearVehiculo(@Header("Authorization") String token,
+                              @Body Vehiculo vehiculo);
 
+        //actualizar vehiculo
+        @PUT("api/Vehiculo/{id}")
+        Call<Void> actualizarVehiculo(@Header("Authorization") String token,
+                                   @Path("id") int id,
+                                   @Body Vehiculo vehiculo);
 
+        //buscar vehiculo por nombre de matricula
+        @GET("api/Vehiculo/matricula/{matricula}")
+        Call<List<Vehiculo>> getBuscarVehiculoMatricula(@Header("Authorization") String token,
+                                         @Query("texto") String texto);
     }
 
 
