@@ -42,6 +42,7 @@ public class VehiculoAdapter extends RecyclerView.Adapter<VehiculoAdapter.Vehicu
     public void onBindViewHolder(@NonNull VehiculoViewHolder holder, int position) {
         Vehiculo vehiculo = vehiculos.get(position);
         holder.tvModelo.setText(vehiculo.getModelo());
+        holder.tvMatricula.setText("Matrícula: " + vehiculo.getMatricula());
         holder.tvFechaVehiculo.setText("Creado: " + formatearFecha(vehiculo.getFecha_Creacion()));
 
         holder.btnModificarVehiculo.setOnClickListener(v -> listener.onModificar(vehiculo));
@@ -73,6 +74,7 @@ public class VehiculoAdapter extends RecyclerView.Adapter<VehiculoAdapter.Vehicu
 
     static class VehiculoViewHolder extends RecyclerView.ViewHolder {
         TextView tvModelo;
+        TextView tvMatricula;
         TextView tvFechaVehiculo;
         ImageButton btnModificarVehiculo;
         ImageButton btnEliminarVehiculo;
@@ -80,6 +82,7 @@ public class VehiculoAdapter extends RecyclerView.Adapter<VehiculoAdapter.Vehicu
         public VehiculoViewHolder(@NonNull View itemView) {
             super(itemView);
             tvModelo = itemView.findViewById(R.id.tvModelo);
+            tvMatricula = itemView.findViewById(R.id.tvMatricula);
             tvFechaVehiculo = itemView.findViewById(R.id.tvFechaVehiculo);
             btnModificarVehiculo = itemView.findViewById(R.id.btnModificarVehiculo);
             btnEliminarVehiculo = itemView.findViewById(R.id.btnEliminarVehiculo);

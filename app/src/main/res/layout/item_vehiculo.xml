@@ -23,6 +23,13 @@
             tools:text="Toyota Corolla" />
 
         <TextView
+            android:id="@+id/tvMatricula"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            tools:text="Matrícula: AB123CD" />
+
+        <TextView
             android:id="@+id/tvFechaVehiculo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

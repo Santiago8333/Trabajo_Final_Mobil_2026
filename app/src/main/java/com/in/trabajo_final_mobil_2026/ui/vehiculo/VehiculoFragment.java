@@ -13,6 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.in.trabajo_final_mobil_2026.R;
 import com.in.trabajo_final_mobil_2026.databinding.FragmentVehiculoBinding;
 import com.in.trabajo_final_mobil_2026.modelo.Vehiculo;
 
@@ -39,18 +43,59 @@ public class VehiculoFragment extends Fragment implements VehiculoAdapter.OnVehi
 
         mv.getMensaje().observe(getViewLifecycleOwner(), msg -> b.tvMensajeVehiculo.setText(msg));
 
+        // botón flotante para crear vehículo
+        b.fabCrearVehiculo.setOnClickListener(v -> mostrarDialogoCrear());
+
         mv.ObtenerVehiculo();
 
         return b.getRoot();
     }
 
+    private void mostrarDialogoCrear() {
+        mostrarDialogoVehiculo(null);
+    }
+
+
+    private void mostrarDialogoVehiculo(Vehiculo vehiculo) {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_vehiculo, null);
+
+        TextInputEditText edMatricula = dialogView.findViewById(R.id.edVehiculoMatricula);
+        TextInputEditText edModelo = dialogView.findViewById(R.id.edVehiculoModelo);
+
+        boolean esModificar = vehiculo != null;
+        if (esModificar) {
+            edMatricula.setText(vehiculo.getMatricula());
+            edModelo.setText(vehiculo.getModelo());
+        }
+
+        new AlertDialog.Builder(requireContext())
+                .setTitle(esModificar ? "Modificar vehículo" : "Crear vehículo")
+                .setView(dialogView)
+                .setPositiveButton("Guardar", (dialog, which) -> {
+                    String matricula = edMatricula.getText().toString();
+                    String modelo = edModelo.getText().toString();
+                    if (esModificar) {
+                        mv.ModificarVehiculo(vehiculo.getId_Vehiculo(), matricula, modelo);
+                    } else {
+                        mv.CrearVehiculo(matricula, modelo);
+                    }
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
     @Override
     public void onModificar(Vehiculo vehiculo) {
-        // TODO: abrir diálogo para modificar el vehículo
+        mostrarDialogoVehiculo(vehiculo);
     }
 
     @Override
     public void onEliminar(Vehiculo vehiculo) {
-        // TODO: abrir diálogo de confirmación para eliminar
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Eliminar vehículo")
+                .setMessage("¿Seguro que desea eliminar el vehículo " + vehiculo.getMatricula() + "?")
+                .setPositiveButton("Eliminar", (dialog, which) -> mv.EliminarVehiculo(vehiculo.getId_Vehiculo()))
+                .setNegativeButton("Cancelar", null)
+                .show();
     }
 }

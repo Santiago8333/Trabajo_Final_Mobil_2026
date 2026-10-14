@@ -8,6 +8,9 @@ public class Vehiculo implements Serializable {
     @SerializedName(value = "id_Vehiculo", alternate = {"Id_Vehiculo"})
     private int id_Vehiculo;
 
+    @SerializedName(value = "matricula", alternate = {"Matricula"})
+    private String Matricula;
+
     @SerializedName(value = "modelo", alternate = {"Modelo"})
     private String Modelo;
 
@@ -20,6 +23,14 @@ public class Vehiculo implements Serializable {
 
     public void setId_Vehiculo(int id_Vehiculo) {
         this.id_Vehiculo = id_Vehiculo;
+    }
+
+    public String getMatricula() {
+        return Matricula;
+    }
+
+    public void setMatricula(String matricula) {
+        Matricula = matricula;
     }
 
     public String getModelo() {
