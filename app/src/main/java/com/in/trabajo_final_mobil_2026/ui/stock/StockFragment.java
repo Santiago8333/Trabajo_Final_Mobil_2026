@@ -75,7 +75,7 @@ public class StockFragment extends Fragment implements StockAdapter.OnStockClick
         return b.getRoot();
     }
 
-    // si stock == null -> crear; si no -> modificar (precargado)
+
     private void mostrarDialogoStock(Stock stock) {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_stock, null);
 

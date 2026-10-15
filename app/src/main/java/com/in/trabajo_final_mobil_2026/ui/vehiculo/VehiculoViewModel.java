@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.in.trabajo_final_mobil_2026.modelo.Usuario;
 import com.in.trabajo_final_mobil_2026.modelo.Vehiculo;
 import com.in.trabajo_final_mobil_2026.request.ApiClient;
 
@@ -194,6 +195,39 @@ public class VehiculoViewModel extends AndroidViewModel {
                 mensaje.setValue("Error de conexión");
             }
         });
+
+    }
+
+    public void BuscarVehiculo(String texto) {
+
+        if (texto == null || texto.trim().isEmpty()) {
+            ObtenerVehiculo();
+            return;
+        }
+
+        String token = ApiClient.leerToken(getApplication());
+        Call<List<Vehiculo>> call = ApiClient.getServicio().getBuscarVehiculos(token, texto.trim());
+
+        call.enqueue(new Callback<List<Vehiculo>>() {
+            @Override
+            public void onResponse(Call<List<Vehiculo>> call, Response<List<Vehiculo>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    listaVehiculo.setValue(response.body());
+                    mensaje.setValue(response.body().isEmpty() ? "Sin resultados" : "");
+                } else if (response.code() == 401 || response.code() == 403) {
+                    mensaje.setValue("No autorizado");
+                } else {
+                    Log.d("ErrorVehiculo", "codigo buscar: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Vehiculo>> call, Throwable t) {
+                Log.d("ErrorVehiculo", t.getMessage());
+                mensaje.setValue("Error de conexión");
+            }
+        });
+
 
     }
 

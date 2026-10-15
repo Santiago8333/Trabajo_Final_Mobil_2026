@@ -161,8 +161,13 @@ public class ApiClient {
 
         //buscar vehiculo por nombre de matricula
         @GET("api/Vehiculo/matricula/{matricula}")
-        Call<List<Vehiculo>> getBuscarVehiculoMatricula(@Header("Authorization") String token,
-                                         @Query("texto") String texto);
+        Call<Vehiculo> getBuscarVehiculoMatricula(@Header("Authorization") String token,
+                                                  @Path("matricula") String matricula);
+
+        //buscar vehiculos por coincidencia parcial en matricula o modelo
+        @GET("api/Vehiculo/buscar")
+        Call<List<Vehiculo>> getBuscarVehiculos(@Header("Authorization") String token,
+                                                @Query("texto") String texto);
     }
 
 

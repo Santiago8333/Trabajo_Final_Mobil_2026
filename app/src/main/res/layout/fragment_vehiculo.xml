@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             app:startIconDrawable="@android:drawable/ic_menu_search"
-            android:hint="Buscar por modelo">
+            android:hint="Buscar por matrícula o modelo">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edBuscarVehiculo"

@@ -9,6 +9,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +28,10 @@ public class VehiculoFragment extends Fragment implements VehiculoAdapter.OnVehi
     private FragmentVehiculoBinding b;
 
     private VehiculoViewModel mv;
+
+    private final Handler handlerBusqueda = new Handler(Looper.getMainLooper());
+
+    private Runnable buscarRunnable = () -> { };
 
     public static VehiculoFragment newInstance() {
         return new VehiculoFragment();
@@ -47,6 +55,30 @@ public class VehiculoFragment extends Fragment implements VehiculoAdapter.OnVehi
         b.fabCrearVehiculo.setOnClickListener(v -> mostrarDialogoCrear());
 
         mv.ObtenerVehiculo();
+
+        b.edBuscarVehiculo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int i, int i1, int i2) {
+                String texto = s.toString();
+                // cancela la búsqueda pendiente anterior
+                handlerBusqueda.removeCallbacks(buscarRunnable);
+                buscarRunnable = () -> mv.BuscarVehiculo(texto);
+                // programa la búsqueda 400ms después de la última tecla
+                handlerBusqueda.postDelayed(buscarRunnable,400);
+
+            }
+        });
+
 
         return b.getRoot();
     }
