@@ -185,4 +185,15 @@ public class ApiClient {
         SharedPreferences sp = context.getSharedPreferences("token.xml", Context.MODE_PRIVATE);
         return sp.getString("token", null);
     }
+
+    // id del usuario logueado (se guarda al hacer login)
+    public static void guardarIdUsuario(Context context, int idUsuario) {
+        SharedPreferences sp = context.getSharedPreferences("token.xml", Context.MODE_PRIVATE);
+        sp.edit().putInt("idUsuario", idUsuario).apply();
+    }
+
+    public static int leerIdUsuario(Context context) {
+        SharedPreferences sp = context.getSharedPreferences("token.xml", Context.MODE_PRIVATE);
+        return sp.getInt("idUsuario", -1); // -1 = no hay usuario guardado
+    }
 }

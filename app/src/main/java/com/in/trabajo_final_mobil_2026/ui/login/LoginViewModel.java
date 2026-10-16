@@ -50,6 +50,8 @@ public class LoginViewModel extends AndroidViewModel {
                     LoginResponse body = response.body();
                     // guardar el token para las próximas peticiones
                     ApiClient.crearToken(getApplication(), body.getToken());
+                    // guardar el id del usuario logueado
+                    ApiClient.guardarIdUsuario(getApplication(), body.getUsuario().getId_Usuario());
                     Log.d("Token", body.getToken());
                     mensajem.setValue("Bienvenido " + body.getUsuario().getNombre());
                     loginExitoso.setValue(body);
