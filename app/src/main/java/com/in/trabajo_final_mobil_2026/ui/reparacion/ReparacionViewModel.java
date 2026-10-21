@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.in.trabajo_final_mobil_2026.modelo.Reparacion;
+import com.in.trabajo_final_mobil_2026.modelo.Stock;
 import com.in.trabajo_final_mobil_2026.modelo.Vehiculo;
 import com.in.trabajo_final_mobil_2026.request.ApiClient;
 
@@ -149,7 +150,60 @@ public class ReparacionViewModel extends AndroidViewModel {
         }
     }
 
+    public void EliminarReparacion(int id) {
+        String token = ApiClient.leerToken(getApplication());
+        Call<Void> call = ApiClient.getServicio().eliminarReparacion(token, id);
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                if (response.isSuccessful()) {
+                    mensaje.setValue("reparacion eliminada");
+                    ObtenerReparacion();
+                } else if (response.code() == 404) {
+                    mensaje.setValue("reparacion no existe");
+                } else if (response.code() == 401 || response.code() == 403) {
+                    mensaje.setValue("No autorizado");
+                } else {
+                    Log.d("ErrorReparacion", "codigo eliminar: " + response.code());
+                    mensaje.setValue("No se pudo eliminar la reparacion");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                Log.d("ErrorReparacion", t.getMessage());
+                mensaje.setValue("Error de conexión");
+            }
+        });
+    }
 
 
+    public void BuscarReparaciones(String texto) {
+        if (texto == null || texto.trim().isEmpty()) {
+            ObtenerReparacion();
+            return;
+        }
+        String token = ApiClient.leerToken(getApplication());
+        Call<List<Reparacion>> call = ApiClient.getServicio().getBuscarReparacion(token, texto);
+
+        call.enqueue(new Callback<List<Reparacion>>() {
+            @Override
+            public void onResponse(Call<List<Reparacion>> call, Response<List<Reparacion>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    listaReparacion.setValue(response.body());
+                } else {
+                    Log.d("ErrorReparacion", "codigo buscar: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Reparacion>> call, Throwable t) {
+                Log.d("ErrorReparacion", t.getMessage());
+            }
+        });
+
+
+    }
 
 }
