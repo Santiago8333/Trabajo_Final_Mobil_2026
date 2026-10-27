@@ -150,6 +150,60 @@ public class ReparacionViewModel extends AndroidViewModel {
         }
     }
 
+    public void ModificarReparacion(int id, int idUsuario, String idVehiculo, String nombre_cliente,
+                                    String fecha_ingreso, String descripcion_trabajo_realizado,
+                                    String motivo_ingreso, String costo_mano_de_obra) {
+
+        if (idVehiculo.isEmpty() || nombre_cliente.isEmpty() || fecha_ingreso.isEmpty()
+                || descripcion_trabajo_realizado.isEmpty() || motivo_ingreso.isEmpty()
+                || costo_mano_de_obra.isEmpty()) {
+            mensaje.setValue("Datos Faltantes");
+            return;
+        }
+
+        try {
+            Reparacion r = new Reparacion();
+            r.setId_Reparacion(id);
+            r.setIdUsuario(idUsuario);   // se conserva el mecánico que la creó
+            r.setIdVehiculo(Integer.parseInt(idVehiculo));
+            r.setNombre_Cliente(nombre_cliente);
+            r.setFecha_Ingreso(fecha_ingreso);
+            r.setDescripcion_Trabajo_Realizado(descripcion_trabajo_realizado);
+            r.setMotivo_Ingreso(motivo_ingreso);
+            r.setCosto_Mano_De_Obra(Double.parseDouble(costo_mano_de_obra));
+            // no se envía Fecha_Creacion: la actualización no la modifica
+
+            String token = ApiClient.leerToken(getApplication());
+            Call<Void> call = ApiClient.getServicio().actualizarReparacion(token, id, r);
+
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        mensaje.setValue("Reparación actualizada");
+                        ObtenerReparacion();
+                    } else if (response.code() == 404) {
+                        mensaje.setValue("La reparación no existe");
+                    } else if (response.code() == 401 || response.code() == 403) {
+                        mensaje.setValue("No autorizado");
+                    } else {
+                        Log.d("ErrorReparacion", "codigo modificar: " + response.code());
+                        mensaje.setValue("No se pudo actualizar la reparación");
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                    Log.d("ErrorReparacion", t.getMessage());
+                    mensaje.setValue("Error de conexión");
+                }
+            });
+
+        } catch (NumberFormatException e) {
+            mensaje.setValue("El vehículo y el costo deben ser números válidos");
+        }
+    }
+
     public void EliminarReparacion(int id) {
         String token = ApiClient.leerToken(getApplication());
         Call<Void> call = ApiClient.getServicio().eliminarReparacion(token, id);

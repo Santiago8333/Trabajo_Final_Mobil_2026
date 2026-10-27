@@ -135,6 +135,12 @@ public class ApiClient {
         Call<Void> crearReparacion(@Header("Authorization") String token,
                                 @Body Reparacion reparacion);
 
+        //actualizar reparacion
+        @PUT("api/Reparacion/{id}")
+        Call<Void> actualizarReparacion(@Header("Authorization") String token,
+                                        @Path("id") int id,
+                                        @Body Reparacion reparacion);
+
         //eliminar reparacion
         @DELETE("api/Reparacion/{id}")
         Call<Void> eliminarReparacion(@Header("Authorization") String token,

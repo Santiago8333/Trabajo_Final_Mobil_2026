@@ -9,6 +9,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +41,10 @@ public class ReparacionFragment extends Fragment implements ReparacionAdapter.On
     private ReparacionViewModel mv;
     private List<Vehiculo> vehiculos; // para el desplegable del formulario
 
+    // para el debounce de la búsqueda
+    private final Handler handlerBusqueda = new Handler(Looper.getMainLooper());
+    private Runnable buscarRunnable = () -> { };
+
     public static ReparacionFragment newInstance() {
         return new ReparacionFragment();
     }
@@ -63,10 +71,40 @@ public class ReparacionFragment extends Fragment implements ReparacionAdapter.On
         mv.ObtenerReparacion();
         mv.ObtenerVehiculos();
 
+        // buscar mientras se escribe, con debounce de 400ms
+        b.edBuscarReparacion.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int i, int i1, int i2) {
+                String texto = s.toString();
+                // cancela la búsqueda pendiente anterior
+                handlerBusqueda.removeCallbacks(buscarRunnable);
+                buscarRunnable = () -> mv.BuscarReparaciones(texto);
+                // programa la búsqueda 400ms después de la última tecla
+                handlerBusqueda.postDelayed(buscarRunnable, 400);
+
+            }
+        });
+
+
         return b.getRoot();
     }
 
     private void mostrarDialogoCrear() {
+        mostrarDialogoReparacion(null);
+    }
+
+    // si reparacion == null -> crear; si no -> modificar (precargado)
+    private void mostrarDialogoReparacion(Reparacion reparacion) {
         if (vehiculos == null || vehiculos.isEmpty()) {
             Toast.makeText(getContext(), "No hay vehículos cargados. Cree uno primero.", Toast.LENGTH_SHORT).show();
             mv.ObtenerVehiculos(); // reintenta por si todavía no habían llegado
@@ -92,41 +130,83 @@ public class ReparacionFragment extends Fragment implements ReparacionAdapter.On
         TextInputEditText edDescripcion = dialogView.findViewById(R.id.edRepDescripcion);
         TextInputEditText edCosto = dialogView.findViewById(R.id.edRepCosto);
 
-        // fecha de ingreso: por defecto hoy, y al tocar se abre un calendario
+        boolean esModificar = reparacion != null;
+
+        // fecha de ingreso: por defecto hoy (o la de la reparación), al tocar se abre un calendario
         Calendar hoy = Calendar.getInstance();
         edFechaIngreso.setText(String.format(Locale.getDefault(), "%04d-%02d-%02d",
                 hoy.get(Calendar.YEAR), hoy.get(Calendar.MONTH) + 1, hoy.get(Calendar.DAY_OF_MONTH)));
 
-        edFechaIngreso.setOnClickListener(v -> new DatePickerDialog(requireContext(),
-                (picker, anio, mes, dia) -> edFechaIngreso.setText(
-                        String.format(Locale.getDefault(), "%04d-%02d-%02d", anio, mes + 1, dia)),
-                hoy.get(Calendar.YEAR), hoy.get(Calendar.MONTH), hoy.get(Calendar.DAY_OF_MONTH)
-        ).show());
+        if (esModificar) {
+            edCliente.setText(reparacion.getNombre_Cliente());
+            edMotivo.setText(reparacion.getMotivo_Ingreso());
+            edDescripcion.setText(reparacion.getDescripcion_Trabajo_Realizado());
+            edCosto.setText(String.valueOf(reparacion.getCosto_Mano_De_Obra()));
+            if (reparacion.getFecha_Ingreso() != null) {
+                // la API puede devolver "2026-07-14T00:00:00": se deja solo la fecha
+                edFechaIngreso.setText(reparacion.getFecha_Ingreso().split("T")[0]);
+            }
+            // preseleccionar el vehículo de la reparación
+            for (int i = 0; i < vehiculos.size(); i++) {
+                if (vehiculos.get(i).getId_Vehiculo() == reparacion.getIdVehiculo()) {
+                    spVehiculo.setSelection(i);
+                    break;
+                }
+            }
+        }
+
+        edFechaIngreso.setOnClickListener(v -> {
+            // el calendario abre en la fecha que tiene el campo
+            Calendar cal = Calendar.getInstance();
+            String[] p = edFechaIngreso.getText().toString().split("-");
+            if (p.length == 3) {
+                try {
+                    cal.set(Integer.parseInt(p[0]), Integer.parseInt(p[1]) - 1, Integer.parseInt(p[2]));
+                } catch (NumberFormatException ignored) { }
+            }
+            new DatePickerDialog(requireContext(),
+                    (picker, anio, mes, dia) -> edFechaIngreso.setText(
+                            String.format(Locale.getDefault(), "%04d-%02d-%02d", anio, mes + 1, dia)),
+                    cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)
+            ).show();
+        });
 
         new AlertDialog.Builder(requireContext())
-                .setTitle("Nueva reparación")
+                .setTitle(esModificar ? "Modificar reparación" : "Nueva reparación")
                 .setView(dialogView)
-                .setPositiveButton("Guardar", (dialog, which) ->
-                        mv.CrearReparacion(
-                                // id del vehículo elegido en el desplegable
-                                String.valueOf(vehiculos.get(spVehiculo.getSelectedItemPosition()).getId_Vehiculo()),
-                                edCliente.getText().toString(),
-                                edFechaIngreso.getText().toString(),
-                                edDescripcion.getText().toString(),
-                                edMotivo.getText().toString(),
-                                edCosto.getText().toString()
-                        ))
+                .setPositiveButton("Guardar", (dialog, which) -> {
+                    // id del vehículo elegido en el desplegable
+                    String idVehiculo = String.valueOf(
+                            vehiculos.get(spVehiculo.getSelectedItemPosition()).getId_Vehiculo());
+                    String cliente = edCliente.getText().toString();
+                    String fecha = edFechaIngreso.getText().toString();
+                    String descripcion = edDescripcion.getText().toString();
+                    String motivo = edMotivo.getText().toString();
+                    String costo = edCosto.getText().toString();
+
+                    if (esModificar) {
+                        mv.ModificarReparacion(reparacion.getId_Reparacion(), reparacion.getIdUsuario(),
+                                idVehiculo, cliente, fecha, descripcion, motivo, costo);
+                    } else {
+                        mv.CrearReparacion(idVehiculo, cliente, fecha, descripcion, motivo, costo);
+                    }
+                })
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
 
     @Override
     public void onModificar(Reparacion reparacion) {
-        // TODO: abrir diálogo para modificar la reparación
+        mostrarDialogoReparacion(reparacion);
     }
 
     @Override
     public void onEliminar(Reparacion reparacion) {
-        // TODO: abrir diálogo de confirmación para eliminar
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Eliminar reparación")
+                .setMessage("¿Seguro que desea eliminar la reparación de " + reparacion.getNombre_Cliente() + "?")
+                .setPositiveButton("Eliminar", (dialog, which) -> mv.EliminarReparacion(reparacion.getId_Reparacion()))
+                .setNegativeButton("Cancelar", null)
+                .show();
     }
 }
