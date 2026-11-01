@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.in.trabajo_final_mobil_2026.modelo.AvatarResponse;
 import com.in.trabajo_final_mobil_2026.modelo.ClaveRequest;
+import com.in.trabajo_final_mobil_2026.modelo.DetalleReparacion;
 import com.in.trabajo_final_mobil_2026.modelo.LoginRequest;
 import com.in.trabajo_final_mobil_2026.modelo.LoginResponse;
 import com.in.trabajo_final_mobil_2026.modelo.Reparacion;
@@ -174,6 +175,38 @@ public class ApiClient {
         @GET("api/Vehiculo/buscar")
         Call<List<Vehiculo>> getBuscarVehiculos(@Header("Authorization") String token,
                                                 @Query("texto") String texto);
+
+        //---------------- detalle de reparacion ----------------
+
+        //obtener todos los detalles
+        @GET("api/Reparacion/detalle")
+        Call<List<DetalleReparacion>> getDetalles(@Header("Authorization") String token);
+
+        //obtener detalle por id
+        @GET("api/Reparacion/detalle/{id}")
+        Call<DetalleReparacion> getDetalle(@Header("Authorization") String token,
+                                           @Path("id") int id);
+
+        //obtener detalles (piezas usadas) de una reparacion
+        @GET("api/Reparacion/{idReparacion}/detalle")
+        Call<List<DetalleReparacion>> getDetallesDeReparacion(@Header("Authorization") String token,
+                                                              @Path("idReparacion") int idReparacion);
+
+        //crear detalle (descuenta del stock)
+        @POST("api/Reparacion/detalle")
+        Call<Void> crearDetalle(@Header("Authorization") String token,
+                                @Body DetalleReparacion detalle);
+
+        //actualizar detalle (ajusta el stock)
+        @PUT("api/Reparacion/detalle/{id}")
+        Call<Void> actualizarDetalle(@Header("Authorization") String token,
+                                     @Path("id") int id,
+                                     @Body DetalleReparacion detalle);
+
+        //eliminar detalle (devuelve la cantidad al stock)
+        @DELETE("api/Reparacion/detalle/{id}")
+        Call<Void> eliminarDetalle(@Header("Authorization") String token,
+                                   @Path("id") int id);
     }
 
 

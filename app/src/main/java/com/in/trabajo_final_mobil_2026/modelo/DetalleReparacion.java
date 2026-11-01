@@ -1,14 +1,29 @@
 package com.in.trabajo_final_mobil_2026.modelo;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class DetalleReparacion implements Serializable {
+    @SerializedName(value = "id_Detalle", alternate = {"Id_Detalle"})
     private int Id_Detalle;
+
+    @SerializedName(value = "idStock", alternate = {"IdStock"})
     private int idStock;
+
+    @SerializedName(value = "idReparacion", alternate = {"IdReparacion"})
     private int idReparacion;
+
+    @SerializedName(value = "cantidad_Usada", alternate = {"Cantidad_Usada"})
     private int Cantidad_Usada;
+
+    @SerializedName(value = "precio_Unitario_Momento", alternate = {"Precio_Unitario_Momento"})
     private double Precio_Unitario_Momento;
+
+    @SerializedName(value = "subtotal", alternate = {"Subtotal"})
     private double Subtotal;
+
+    @SerializedName(value = "fecha_Consumo", alternate = {"Fecha_Consumo"})
     private String Fecha_Consumo;
 
     public int getId_Detalle() {
